@@ -26,4 +26,20 @@ sudo cp -r /mnt/* /media
 可以通过 `dumpe2fs sdcard-bb-ext4.img | less` 的 features 字段检查是否去除了
 lwext4 不兼容的特性。
 
-### VFS
+### ext4_hack
+
+为了在 lwext4 上测试 ext4 文件系统，我们需要一个 hack 来使 loos 正常运行：
+
+```c
+#ifndef __EXT4_HACK_H__
+#define __EXT4_HACK_H__
+
+#define fflush(...) ;
+#define PART_SIZE 2048*1024*1024
+
+#endif
+```
+
+这段代码定义了一个头文件，通过头文件保护机制防止重复包含。它将 `fflush` 宏替换为空操作，并定义了 `PART_SIZE` 常量，其值为 2048\*1024\*1024 字节（2GB）。
+
+
