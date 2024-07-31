@@ -23,22 +23,31 @@ nav:
   - LoongArch ISA 介绍:
     - 主页: arch/index.md
     - 整数指令: arch/int.md
+    - 浮点指令: arch/float.md
     - 特权指令架构: arch/priv.md
     - ABI: arch/abi.md
     - 内存管理: arch/mm.md
   - 文件系统:
     - 主页: fs/index.md
+    - 进程标识符管理: fs/fd.md
+    - 镜像管理: fs/img.md
   - 进程系统:
     - 主页: proc/index.md
+    - 二进制文件的执行: proc/exec.md
+    - 进程的状态与调度: proc/sche.md
   - 中断/异常系统:
     - 主页: trap/index.md
+    - 异常处理: trap/exception.md
+    - 中断处理: trap/intrrupt.md
   - lolibc:
     - 主页: klib/index.md
     - KDB(Kernel Debugger): klib/kdb.md
+    - 内核文件结构: klib/struct.md
   - 竞赛相关:
     - 主页: oscomp/index.md
     - LoongArch 相关: oscomp/loongarch.md
     - 初赛赛题分析: oscomp/syscalls.md
+  - 函数速查表: references.md
 
 markdown_extensions:
   - extra
