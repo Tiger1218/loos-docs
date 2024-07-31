@@ -1,8 +1,82 @@
 # 文件描述符管理
 
+
+
 ## 常用宏
 
+### fd_invaild
 
+```c
+static inline int fd_invaild(int fd) {
+    struct proc * proc = my_proc();
+    int result = (fd < 0) || (fd >= MAX_FDTABLE) || (proc->fdtable[fd].busy == 0);
+    if( result == 1 ) {
+        Log("proc name: %s %p\n", proc->name, proc);
+        Log("cur fd = %d\n", fd);
+        Log("1 : %d 2 : %d 3 : %d\n", (fd < 0) , (fd >= MAX_FDTABLE) , (proc->fdtable[fd].busy == 0));
+        for ( int i = 0 ; i < MAX_FDTABLE ; i ++ ) {
+            if ( proc->fdtable[i].busy == 1 ) {
+                Log("%d: %d\n", i, proc->fdtable[i].fds_index);
+            }
+        }
+    }
+    return (fd < 0) || (fd >= MAX_FDTABLE) || (proc->fdtable[fd].busy == 0);
+}
+```
+
+### fd_to_fds
+
+```c
+struct MYFILE * fd_to_fds(int fd){
+    struct proc * proc = my_proc();
+    if ( proc->fdtable[fd].busy == 0 ) panic("ftf, not busy");
+    int index = proc->fdtable[fd].fds_index;
+    return &fds[index];
+}
+```
+
+## 文件符管理
+
+### 全局文件描述符号
+
+#### 分配全局文件描述符
+
+```c
+int alloc_fds(){
+    for ( int i = 0 ; i < MAX_FILES ; i ++ ){
+        if ( fds[i].alloc == 0 ) {
+            fds[i].alloc = 1;
+            Log("allocing fds: %d\n", i);
+            return i;
+        }
+    }
+    panic("alloc fds");
+}
+
+void free_fds(int index){
+    // dump_fds();
+    Log("free fds: %d\n", index);
+    if ( fds[index].alloc != 1 ) panic("free fds");
+    fds[index].alloc = 0;
+    // if( fds[index].flags & FILE_PIPE_FLAGS ) {
+        //
+    // }
+}
+```
+
+#### 调试函数
+
+```c
+void dump_fds(){
+    for ( int i = 0 ; i < MAX_FILES ; i ++){
+        if( fds[i].alloc == 1 ){
+            if ( i >= 0 && i <= 2 ) continue;
+            if ( fds[i].f_inode == NULL) continue;
+            Log("%d: %s\n", i, name_by_inode[fds[i].f_inode->i_ino]);
+        }
+    }
+}
+```
 
 ### 进程文件描述符管理
 
